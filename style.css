@@ -41,6 +41,13 @@ header {
     position: relative;
 }
 
+/* --- TAMPILAN LAPTOP/DESKTOP (DEFAULT) --- */
+header .container {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+}
+
 header h1 {
     font-size: 1.75rem;
     font-weight: 700;
@@ -53,12 +60,14 @@ nav a {
     padding: 8px 15px;
     border-radius: 6px; /* Lebih kecil */
     transition: background-color 0.3s, transform 0.2s;
-    font-weight: 500;
+    font-weight: 700; /* Diperkuat agar konsisten */
+    border: 1px solid transparent; 
 }
 
 nav a:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* Hover transparan lebih jelas */
+    background-color: rgba(255, 255, 255, 0.25); /* Hover transparan lebih jelas */
     transform: translateY(-2px);
+    border: 1px solid var(--text-light);
 }
 
 .container {
@@ -252,24 +261,97 @@ tbody tr:hover {
     box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.1);
     outline: none;
 }
-/* ... Kode CSS sebelumnya ... */
 
-nav a {
-    color: var(--text-light);
-    text-decoration: none;
-    margin-left: 25px;
-    padding: 8px 15px;
-    border-radius: 6px;
-    transition: background-color 0.3s, transform 0.2s;
-    /* PERUBAHAN DI SINI: Dibuat lebih tebal dari 500 */
-    font-weight: 700; 
-    border: 1px solid transparent; /* Tambahkan border transparan agar tidak "melompat" saat hover/focus */
+/* --- MEDIA QUERY UNTUK LAYAR KECIL (MOBILE) --- */
+@media (max-width: 768px) {
+    /* Mengubah tata letak di header dari horizontal menjadi vertikal */
+    header .container {
+        flex-direction: column; 
+        align-items: flex-start; 
+        padding: 1rem; 
+    }
+
+    /* Menyesuaikan ukuran judul */
+    header h1 {
+        font-size: 1.5rem; 
+        margin-bottom: 10px; 
+    }
+
+    /* Mengatur navigasi */
+    nav {
+        margin-top: 5px;
+        width: 100%; 
+        display: flex; 
+        justify-content: flex-start;
+        /* Tambahan: agar tautan dashboard tidak terlalu jauh */
+    }
+
+    /* Mengatur jarak antar tautan */
+    nav a {
+        margin-left: 0; 
+        margin-right: 15px; 
+        padding: 5px 10px; 
+        font-size: 0.9rem; 
+    }
+    
+    /* Mengurangi padding umum agar konten formulir di HP lebih lega */
+    .container {
+        padding: 1rem;
+    }
+    
+    .card {
+        padding: 1rem;
+    }
+    
+    /* Mengubah tampilan tabel di mobile agar lebih mudah dibaca */
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tr { border: 1px solid #ccc; margin-bottom: 10px; border-radius: 8px; }
+
+    td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%; /* Memberi ruang untuk label */
+        text-align: right;
+    }
+
+    td:before {
+        /* Menggunakan label dari th yang disembunyikan */
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        color: var(--maroon-primary);
+    }
+
+    /* Menyesuaikan label (berdasarkan urutan kolom di dashboard.html) */
+    td:nth-of-type(1):before { content: "ID Pekerja:"; }
+    td:nth-of-type(2):before { content: "Pelapor:"; }
+    td:nth-of-type(3):before { content: "Lokasi:"; }
+    td:nth-of-type(4):before { content: "Kategori:"; }
+    td:nth-of-type(5):before { content: "Deskripsi:"; }
+    td:nth-of-type(6):before { content: "Status:"; }
+
+    /* Menyesuaikan stat box agar lebih ringkas */
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    
+    .stat-box h2 {
+        font-size: 2rem;
+    }
 }
-
-nav a:hover {
-    background-color: rgba(255, 255, 255, 0.25); /* Transparansi sedikit ditingkatkan */
-    transform: translateY(-2px);
-    border: 1px solid var(--text-light); /* Menambahkan outline putih saat dihover/fokus */
-}
-
-/* ... Kode CSS selanjutnya ... */
