@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginMessage = document.getElementById('loginMessage');
     
     if (loginOverlay && mainContent && headerContent) {
-        // Hanya dijalankan jika berada di index.html
+        // Hanya dijalankan jika berada di dashboard.html (berdasarkan judul)
         if (document.title.includes('Dashboard HSE')) {
             mainContent.style.display = 'none';
             headerContent.style.display = 'none';
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // === LOGIC UNTUK INPUT FORM (Diperbaiki agar tidak merusak) ===
     const form = document.getElementById('reportForm');
     
-    if (form) { // Hanya dijalankan di inputLaporan.html
+    if (form) { // Hanya dijalankan di index.html (Halaman Input)
         const statusMessage = document.getElementById('statusMessage');
         const submitButton = form.querySelector('button[type="submit"]');
 
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // === LOGIC UNTUK DASHBOARD DAN RINCIAN (index.html) ===
+    // === LOGIC UNTUK DASHBOARD DAN RINCIAN (dashboard.html) ===
     const reportTableBody = document.getElementById('reportTableBody');
     const filterStatus = document.getElementById('filterStatus');
     const filterDateStart = document.getElementById('filterDateStart');

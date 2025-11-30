@@ -3,124 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard HSE Terintegrasi - Otomatis</title>
+    <title>Input Laporan Harian - HSE</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
 <body>
-    <header style="display: none;">
+    <header>
         <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
-            <h1>🔥 HSE Dashboard Terintegrasi</h1>
+            <h1>📝 Input Laporan Harian</h1>
             <nav>
-                <a href="inputLaporan.html">Input Laporan</a>
-                <a href="index.html">Dashboard</a>
+                <a href="index.html">Input Laporan</a> 
+                <a href="dashboard.html">Dashboard</a> 
             </nav>
         </div>
     </header>
 
-    <main class="container" style="display: none;">
-        
-        <section class="card">
-            <h2>Statistik Pelaporan Bulan Ini</h2>
-            <p style="margin-bottom: 1.5rem;">Data terotomasi dan terupdate secara *real-time* dari Google Sheet.</p>
+    <main class="container">
+        <div class="card">
+            <h3 style="color: var(--maroon-primary); margin-bottom: 0.5rem;">Formulir Pelaporan Cepat (Fast Report)</h3>
+            <p style="margin-bottom: 1rem; color: #666;">Isi formulir ini dengan cepat dan akurat. Data akan otomatis diolah.</p>
             
-            <div class="stats-grid" id="statsGrid">
-                <div class="stat-box">
-                    <h2 id="totalInsiden">0</h2>
-                    <p>Total Insiden</p>
-                </div>
-                <div class="stat-box">
-                    <h2 id="totalFirstAid">0</h2>
-                    <p>Luka Ringan (First Aid)</p>
-                </div>
-                <div class="stat-box">
-                    <h2 id="totalNearMiss">0</h2>
-                    <p>Near Miss</p>
-                </div>
-                <div class="stat-box">
-                    <h2 id="persenSelesai">0%</h2>
-                    <p>Tindak Lanjut Selesai</p>
-                </div>
-            </div>
-        </section>
+            <div id="statusMessage" class="status-message" style="display: none; padding: 15px; border-radius: 8px; margin-bottom: 1.5rem;"></div>
 
-        <div class="stats-grid" style="grid-template-columns: 2fr 1fr;">
-            <section class="card chart-container">
-                <h3>Tren Kategori Insiden (Semua Data)</h3>
-                <canvas id="categoryChart" style="max-height: 350px;"></canvas>
-            </section>
-            
-            <section class="card">
-                <h3>Ringkasan Cepat</h3>
-                <p>Akses data sumber langsung di Google Spreadsheet untuk melihat rincian.</p>
+            <form id="reportForm">
                 
-                <a href="SPREADSHEET_LINK_HERE" target="_blank" class="btn-primary" style="display: block; text-align: center; width: 100%; margin-top: 15px; text-decoration: none;">
-                    📊 Akses Data Sumber (Spreadsheet)
-                </a>
-
-                <h3 style="margin-top: 2rem;">Aksi Cepat</h3>
-                <p>Laporkan kejadian baru tanpa menunda.</p>
-                <a href="inputLaporan.html" class="btn-primary" style="display: block; text-align: center; width: 100%; margin-top: 15px; text-decoration: none;">➕ Laporkan Insiden Baru</a>
-            </section>
+                <div class="form-group">
+                    <label for="nama_pelapor">Nama Pelapor</label>
+                    <input type="text" id="nama_pelapor" name="Nama Pelapor" placeholder="Siapa yang melaporkan?" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_pekerja">ID Pekerja</label>
+                    <input type="text" id="id_pekerja" name="ID Pekerja" placeholder="Contoh: A1234" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lokasi_kejadian">Lokasi Kejadian</label>
+                    <input type="text" id="lokasi_kejadian" name="Lokasi Kejadian" placeholder="Contoh: Area Produksi Gedung B / Lantai 3" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="kategori_insiden">Kategori Insiden</label>
+                    <select id="kategori_insiden" name="Kategori Insiden" required>
+                        <option value="">-- Pilih Kategori --</option>
+                        <option value="Near Miss">Near Miss (Nyaris Celaka)</option>
+                        <option value="First Aid">Luka Ringan (First Aid)</option>
+                        <option value="Medical Treatment">Luka Berat (MTC)</option>
+                        <option value="Property Damage">Kerusakan Properti</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="deskripsi_kejadian">Deskripsi Kejadian</label>
+                    <textarea id="deskripsi_kejadian" name="Deskripsi Kejadian" rows="5" placeholder="Jelaskan kronologi kejadian secara singkat, penyebab, dan potensi bahaya yang terjadi." required></textarea>
+                </div>
+                
+                
+                <button type="submit" class="btn-primary" style="margin-top: 1.5rem;">🚀 Kirim Laporan ke Sistem</button>
+            </form>
         </div>
-
-        <hr style="margin: 2rem 0;">
-
-        <section class="card">
-            <h2 style="color: var(--text-dark);">Daftar 10 Laporan Terbaru</h2>
-            
-            <div style="margin-bottom: 1rem; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"> 
-                
-                <label for="filterStatus">Filter Status:</label>
-                <select id="filterStatus" class="form-control" style="width: 200px; padding: 0.5rem; border-radius: 5px;">
-                    <option value="Semua">Semua</option>
-                    <option value="Belum Diperiksa">Belum Diperiksa</option>
-                    <option value="Investigasi">Investigasi</option>
-                    <option value="Selesai">Selesai</option>
-                </select>
-                
-                <label for="filterDateStart" style="margin-left: 20px;">Dari Tanggal:</label>
-                <input type="date" id="filterDateStart" class="form-control" style="width: 180px; padding: 0.5rem; border-radius: 5px;">
-                
-                <label for="filterDateEnd">Sampai Tanggal:</label>
-                <input type="date" id="filterDateEnd" class="form-control" style="width: 180px; padding: 0.5rem; border-radius: 5px;">
-
-            </div>
-            
-            <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                <thead>
-                    <tr style="background-color: var(--maroon-primary); color: var(--text-light);">
-                        <th style="padding: 12px; border-radius: 8px 0 0 0;">ID Pekerja</th> 
-                        <th style="padding: 12px;">Pelapor</th>
-                        <th style="padding: 12px;">Lokasi</th>
-                        <th style="padding: 12px;">Kategori</th>
-                        <th style="padding: 12px;">Deskripsi Singkat</th> 
-                        <th style="padding: 12px; border-radius: 0 8px 0 0;">Status (Pilih)</th> 
-                    </tr>
-                </thead>
-                <tbody id="reportTableBody">
-                    </tbody>
-            </table>
-        </section>
-
     </main>
-    
-    <div class="login-overlay" id="loginOverlay" style="display: flex;">
-        <form class="login-form" id="loginForm">
-            <h2>Akses Dashboard HSE</h2>
-            <p style="margin-bottom: 20px; color: #666;">Silakan masukkan kredensial Manager HSE.</p>
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" class="form-control" placeholder="Masukkan username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" class="form-control" placeholder="Masukkan password" required>
-            </div>
-            <button type="submit" class="btn-primary" style="margin-top: 1.5rem; width: 100%;">Login</button>
-            <p id="loginMessage" style="color: var(--maroon-primary); margin-top: 15px; display: none;">Username atau Password salah!</p>
-        </form>
-    </div>
     <script src="script.js"></script>
 </body>
 </html>
