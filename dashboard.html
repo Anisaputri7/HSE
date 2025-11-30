@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard HSE Terintegrasi - Otomatis</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+<body>
+    <header>
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>🔥 HSE Dashboard Terintegrasi</h1>
+            <nav>
+                <a href="inputLaporan.html">Input Laporan</a>
+                <a href="dashboard.html">Dashboard</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <section class="card">
+            <h2>Statistik Pelaporan Bulan Ini</h2>
+            <p style="margin-bottom: 1.5rem;">Data terotomasi dan terupdate secara *real-time* dari Google Sheet.</p>
+            
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-box">
+                    <h2 id="totalInsiden">0</h2>
+                    <p>Total Insiden</p>
+                </div>
+                <div class="stat-box">
+                    <h2 id="totalFirstAid">0</h2>
+                    <p>Luka Ringan (First Aid)</p>
+                </div>
+                <div class="stat-box">
+                    <h2 id="totalNearMiss">0</h2>
+                    <p>Near Miss</p>
+                </div>
+                <div class="stat-box">
+                    <h2 id="persenSelesai">0%</h2>
+                    <p>Tindak Lanjut Selesai</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="stats-grid" style="grid-template-columns: 2fr 1fr;">
+            <section class="card chart-container">
+                <h3>Tren Kategori Insiden (Semua Data)</h3>
+                <canvas id="categoryChart" style="max-height: 350px;"></canvas>
+            </section>
+            
+            <section class="card">
+                <h3>Ringkasan Cepat</h3>
+                <p>Akses data sumber langsung di Google Spreadsheet untuk melihat rincian.</p>
+                
+                <a href="SPREADSHEET_LINK_HERE" target="_blank" class="btn-primary" style="display: block; text-align: center; width: 100%; margin-top: 15px; text-decoration: none;">
+                    📊 Akses Data Sumber (Spreadsheet)
+                </a>
+
+                <h3 style="margin-top: 2rem;">Aksi Cepat</h3>
+                <p>Laporkan kejadian baru tanpa menunda.</p>
+                <a href="inputLaporan.html" class="btn-primary" style="display: block; text-align: center; width: 100%; margin-top: 15px; text-decoration: none;">➕ Laporkan Insiden Baru</a>
+            </section>
+        </div>
+
+        <hr style="margin: 2rem 0;">
+
+        <section class="card">
+            <h2 style="color: var(--text-dark);">Daftar 10 Laporan Terbaru</h2>
+            
+            <div style="margin-bottom: 1rem; display: flex; gap: 10px; align-items: center;">
+                <label for="filterStatus">Filter Status:</label>
+                <select id="filterStatus" class="form-control" style="width: 200px; padding: 0.5rem; border-radius: 5px;">
+                    <option value="Semua">Semua</option>
+                    <option value="Belum Diperiksa">Belum Diperiksa</option>
+                    <option value="Investigasi">Investigasi</option>
+                    <option value="Selesai">Selesai</option>
+                </select>
+            </div>
+            
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="background-color: var(--maroon-primary); color: var(--text-light);">
+                        <th style="padding: 12px; border-radius: 8px 0 0 0;">Tanggal</th>
+                        <th style="padding: 12px;">ID Pekerja</th>
+                        <th style="padding: 12px;">Pelapor</th>
+                        <th style="padding: 12px;">Lokasi</th>
+                        <th style="padding: 12px;">Kategori</th>
+                        <th style="padding: 12px; border-radius: 0 8px 0 0;">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="reportTableBody">
+                    </tbody>
+            </table>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

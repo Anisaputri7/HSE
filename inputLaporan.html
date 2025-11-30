@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Laporan Harian - HSE</title>
+    <link rel="stylesheet" href="style.css">
+    </head>
+<body>
+    <header>
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>📝 Input Laporan Harian</h1>
+            <nav>
+                <a href="inputLaporan.html">Input Laporan</a>
+                <a href="dashboard.html">Dashboard</a> 
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="card">
+            <h3 style="color: var(--maroon-primary); margin-bottom: 0.5rem;">Formulir Pelaporan Cepat (Fast Report)</h3>
+            <p style="margin-bottom: 1rem; color: #666;">Isi formulir ini dengan cepat dan akurat. Data akan otomatis diolah.</p>
+            
+            <form id="reportForm">
+                
+                <div class="form-group">
+                    <label for="nama_pelapor">Nama Pelapor</label>
+                    <input type="text" id="nama_pelapor" name="Nama Pelapor" placeholder="Siapa yang melaporkan?" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_pekerja">ID Pekerja</label>
+                    <input type="text" id="id_pekerja" name="ID Pekerja" placeholder="ID Pekerja (Contoh: P00123)" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lokasi_kejadian">Lokasi Kejadian</label>
+                    <input type="text" id="lokasi_kejadian" name="Lokasi Kejadian" placeholder="Contoh: Area Produksi Gedung B / Lantai 3" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="kategori_insiden">Kategori Insiden</label>
+                    <select id="kategori_insiden" name="Kategori Insiden" required>
+                        <option value="">-- Pilih Kategori --</option>
+                        <option value="Near Miss">Near Miss (Nyaris Celaka)</option>
+                        <option value="First Aid">Luka Ringan (First Aid)</option>
+                        <option value="Medical Treatment">Luka Berat (MTC)</option>
+                        <option value="Property Damage">Kerusakan Properti</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="deskripsi_kejadian">Deskripsi Kejadian</label>
+                    <textarea id="deskripsi_kejadian" name="Deskripsi Kejadian" rows="5" placeholder="Jelaskan kronologi kejadian secara singkat, penyebab, dan potensi bahaya yang terjadi." required></textarea>
+                </div>
+                
+                
+                <button type="submit" class="btn-primary" style="margin-top: 1.5rem;">🚀 Kirim Laporan ke Sistem</button>
+            </form>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,275 @@
+:root {
+    /* Warna Utama & Gradasi - Didefinisikan ulang sebagai 'Maroon' */
+    --maroon-primary: #800000; /* Maroon Tua yang Klasik */
+    --maroon-light: #C04040; /* Maroon Lebih Cerah untuk Aksen */
+    --gradient-start: #A00000; /* Merah Maroon Lebih Terang */
+    --gradient-end: #600000;   /* Merah Tua */
+    
+    /* Warna Teks dan Background */
+    --text-dark: #333333; /* Teks Hitam Agak Soft */
+    --text-light: #ffffff; /* Teks Putih Murni */
+    --bg-light: #ffffff; /* Background Putih Murni */
+    --bg-surface: #fcfcfc; /* Latar belakang untuk elemen dashboard, hampir putih */
+    --shadow-soft: 0 4px 15px rgba(0, 0, 0, 0.08); /* Shadow yang sangat lembut */
+    --shadow-deep: 0 8px 25px rgba(0, 0, 0, 0.15); /* Shadow yang lebih dalam */
+
+    /* Variabel yang sudah ada diubah agar mengarah ke Maroon baru (untuk konsistensi dengan HTML/JS) */
+    --primary-red: var(--maroon-primary);
+    --primary-red-light: var(--maroon-light);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: var(--bg-surface); /* Background lebih lembut */
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+header {
+    /* Menggunakan gradasi maroon */
+    background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+    color: var(--text-light);
+    padding: 1rem 2rem;
+    box-shadow: var(--shadow-deep);
+    z-index: 10;
+    position: relative;
+}
+
+header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+nav a {
+    color: var(--text-light);
+    text-decoration: none;
+    margin-left: 25px;
+    padding: 8px 15px;
+    border-radius: 6px; /* Lebih kecil */
+    transition: background-color 0.3s, transform 0.2s;
+    font-weight: 500;
+}
+
+nav a:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Hover transparan lebih jelas */
+    transform: translateY(-2px);
+}
+
+.container {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* KARTU */
+.card {
+    background-color: var(--bg-light);
+    border-radius: 12px; /* Sudut lebih membulat */
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.3s ease, box-shadow 0.3s;
+    border-top: 5px solid var(--maroon-primary); /* Garis atas sebagai aksen Maroon */
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-deep);
+}
+
+.card h2, .card h3 {
+    color: var(--maroon-primary);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+/* FORM STYLES */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+input[type="text"], input[type="file"], select, textarea { /* Selektor yang lebih spesifik */
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 8px; /* Sudut lebih halus */
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[type="text"]:focus, input[type="file"]:focus, select:focus, textarea:focus {
+    border-color: var(--maroon-light);
+    box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.1); /* Fokus dengan shadow lebih halus */
+    outline: none;
+}
+
+.btn-primary {
+    /* Menggunakan gradasi pada tombol Maroon */
+    background: linear-gradient(to right, var(--maroon-primary), var(--maroon-light));
+    color: var(--text-light);
+    padding: 0.8rem 1.8rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(128, 0, 0, 0.3);
+    transition: background 0.3s ease, transform 0.3s; /* Transisi background */
+}
+
+.btn-primary:hover {
+    background: linear-gradient(to left, var(--maroon-primary), var(--maroon-light)); /* Hover ganti arah gradasi */
+    transform: translateY(-2px);
+}
+
+.btn-primary:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* DASHBOARD LAYOUT */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Lebih responsif */
+    gap: 20px;
+    margin-bottom: 2rem;
+}
+
+.stat-box {
+    text-align: center;
+    padding: 25px;
+    background-color: #ffeaea; /* Maroon sangat muda, sangat cerah */
+    border-radius: 10px;
+    border-left: 5px solid var(--maroon-primary); /* Garis kiri sebagai aksen */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Shadow lebih minimal */
+}
+
+.stat-box h2 {
+    font-size: 3rem;
+    color: var(--maroon-primary);
+    margin-bottom: 0.2rem;
+}
+
+.stat-box p {
+    color: var(--text-dark);
+    font-weight: 400; /* Lebih tipis untuk clean look */
+    font-size: 0.95rem;
+}
+
+/* CHART AREA */
+.chart-container {
+    min-height: 380px;
+}
+
+/* TABLE STYLES */
+table {
+    background-color: var(--bg-light);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+}
+
+thead tr {
+    /* Menggunakan warna maroon utama */
+    background: var(--maroon-primary);
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Putih sangat pucat */
+}
+
+tbody tr:hover {
+    background-color: #f0f0f0;
+}
+
+/* Login Modal/Overlay Style */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Overlay lebih transparan */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.login-form {
+    background-color: var(--bg-light);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-deep);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-form h2 {
+    color: var(--maroon-primary);
+    margin-bottom: 1.5rem;
+    font-size: 1.75rem;
+}
+
+.login-form .form-group {
+    text-align: left;
+}
+
+/* Menggabungkan form-control agar lebih clean */
+.form-control { 
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-control:focus {
+    border-color: var(--maroon-light);
+    box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.1);
+    outline: none;
+}
+/* ... Kode CSS sebelumnya ... */
+
+nav a {
+    color: var(--text-light);
+    text-decoration: none;
+    margin-left: 25px;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: background-color 0.3s, transform 0.2s;
+    /* PERUBAHAN DI SINI: Dibuat lebih tebal dari 500 */
+    font-weight: 700; 
+    border: 1px solid transparent; /* Tambahkan border transparan agar tidak "melompat" saat hover/focus */
+}
+
+nav a:hover {
+    background-color: rgba(255, 255, 255, 0.25); /* Transparansi sedikit ditingkatkan */
+    transform: translateY(-2px);
+    border: 1px solid var(--text-light); /* Menambahkan outline putih saat dihover/fokus */
+}
+
+/* ... Kode CSS selanjutnya ... */
