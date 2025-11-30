@@ -10,6 +10,7 @@ const MANAGER_PASSWORD = 'password123';
 const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz_eaJLR4kRskSYskNmz4Ilsz9p4--hK83HIM6c6mvwtX4zP-fPKPx0HtPsRvb_vQCLlw/exec';
 const SUBMIT_URL = WEB_APP_URL; 
 const READ_REPORTS_URL = `${WEB_APP_URL}?action=read`; 
+const UPDATE_STATUS_URL = `${WEB_APP_URL}?action=updateStatus`; // URL untuk update status
 
 let allReports = []; 
 
@@ -23,45 +24,50 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginMessage = document.getElementById('loginMessage');
     
     if (loginOverlay && mainContent && headerContent) {
-        mainContent.style.display = 'none';
-        headerContent.style.display = 'none';
-
-        loginForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            const usernameInput = document.getElementById('username').value;
-            const passwordInput = document.getElementById('password').value;
-
-            if (usernameInput === MANAGER_USERNAME && passwordInput === MANAGER_PASSWORD) {
-                loginOverlay.style.display = 'none'; 
-                mainContent.style.display = 'block'; 
-                headerContent.style.display = 'block';
-                
-                fetchReportsAndRenderDashboard(); 
-
-            } else {
-                loginMessage.textContent = 'Username atau Password salah! Coba lagi.';
-                loginMessage.style.display = 'block';
-                loginMessage.style.color = '#FF0000'; 
-            }
-        });
-        
+        // Hanya dijalankan jika berada di index.html
         if (document.title.includes('Dashboard HSE')) {
+            mainContent.style.display = 'none';
+            headerContent.style.display = 'none';
+
+            loginForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const usernameInput = document.getElementById('username').value;
+                const passwordInput = document.getElementById('password').value;
+
+                if (usernameInput === MANAGER_USERNAME && passwordInput === MANAGER_PASSWORD) {
+                    loginOverlay.style.display = 'none'; 
+                    mainContent.style.display = 'block'; 
+                    headerContent.style.display = 'block';
+                    
+                    fetchReportsAndRenderDashboard(); 
+
+                } else {
+                    loginMessage.textContent = 'Username atau Password salah! Coba lagi.';
+                    loginMessage.style.display = 'block';
+                    loginMessage.style.color = '#FF0000'; 
+                }
+            });
+            
             loginOverlay.style.display = 'flex';
         }
     }
     // === END: LOGIC UNTUK LOGIN DASHBOARD ===
     
     
-    // === LOGIC UNTUK INPUT FORM (Tidak Berubah) ===
+    // === LOGIC UNTUK INPUT FORM (Diperbaiki agar tidak merusak) ===
     const form = document.getElementById('reportForm');
-    if (form) {
+    
+    if (form) { // Hanya dijalankan di inputLaporan.html
+        const statusMessage = document.getElementById('statusMessage');
+        const submitButton = form.querySelector('button[type="submit"]');
+
         form.addEventListener('submit', function(event) {
             event.preventDefault(); 
             
-            const submitButton = form.querySelector('button[type="submit"]');
             submitButton.disabled = true;
             submitButton.textContent = 'Mengirim... ⏳';
+            if (statusMessage) statusMessage.style.display = 'none';
 
             const formData = new FormData(form);
             const data = {};
@@ -82,20 +88,39 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(response => response.json()) 
             .then(result => {
+                
                 if (result.status === 'SUCCESS') {
-                    alert("Laporan berhasil dikirim! ✅ Data kamu langsung diolah, lho!");
+                    if (statusMessage) {
+                        statusMessage.textContent = '✅ Laporan berhasil diterima! Sedang diproses di latar belakang (Cepat).';
+                        statusMessage.style.backgroundColor = '#e6ffe6';
+                        statusMessage.style.border = '1px solid #00cc00';
+                        statusMessage.style.color = '#008000';
+                        statusMessage.style.display = 'block';
+                    }
                     form.reset();
                 } else {
-                    alert(`Gagal mengirim laporan. Cek Apps Script Anda: ${result.message}`);
+                    if (statusMessage) {
+                        statusMessage.textContent = `❌ Gagal mengirim laporan. Status Apps Script ERROR: ${result.message}`;
+                        statusMessage.style.backgroundColor = '#ffe6e6'; 
+                        statusMessage.style.border = '1px solid #ff0000';
+                        statusMessage.style.color = '#800000';
+                        statusMessage.style.display = 'block';
+                    }
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Terjadi kesalahan jaringan atau server saat mengirim laporan.');
+                if (statusMessage) {
+                    statusMessage.textContent = 'Terjadi kesalahan jaringan atau server saat mengirim laporan.';
+                    statusMessage.style.backgroundColor = '#ffe6e6';
+                    statusMessage.style.border = '1px solid #ff0000';
+                    statusMessage.style.color = '#800000';
+                    statusMessage.style.display = 'block';
+                }
             })
             .finally(() => {
                 submitButton.disabled = false;
-                submitButton.textContent = '🚀 Kirim Laporan';
+                submitButton.textContent = '🚀 Kirim Laporan ke Sistem';
             });
         });
     }
@@ -112,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const dateStart = filterDateStart ? filterDateStart.value : null;
         const dateEnd = filterDateEnd ? filterDateEnd.value : null;
 
-        // Filter berdasarkan tanggal masih harus menggunakan Timestamp, walaupun tidak ditampilkan.
         const datedReports = filterReportsByDate(allReports, dateStart, dateEnd);
         
         calculateAndRenderStats(datedReports);
@@ -132,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // Fungsi Filter Tanggal (Menggunakan logika parsing yang sudah teruji)
+    // Fungsi Filter Tanggal (Dibiarkan sama)
     function filterReportsByDate(reports, startDate, endDate) {
         if (!reports || reports.length === 0) return [];
         if (!startDate && !endDate) return reports;
@@ -141,14 +165,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const end = endDate ? new Date(endDate) : null;
         
         if (end) {
-            // Majukan End Date 1 hari agar tanggal akhir termasuk
             end.setDate(end.getDate() + 1);
         }
 
         return reports.filter(report => {
             if (!report.Timestamp || report.Timestamp === '') return false;
             
-            // Logika Parsing Tanggal Aman
             let dateObj;
             try {
                 const timestampData = report.Timestamp;
@@ -204,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
     
-    // Fungsi untuk Menghitung dan Menampilkan Statistik
+    // Fungsi untuk Menghitung dan Menampilkan Statistik (Dibiarkan sama)
     function calculateAndRenderStats(reports) {
         const total = reports.length;
         let nearMiss = 0;
@@ -235,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // Fungsi untuk Membuat Grafik Dinamis
+    // Fungsi untuk Membuat Grafik Dinamis (Dibiarkan sama)
     let myChart;
     function renderCategoryChart(reports) {
         const categoryCounts = {};
@@ -286,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // Fungsi untuk Menampilkan Rincian Laporan (Sekarang Deskripsi Singkat)
+    // Fungsi untuk Menampilkan Rincian Laporan
     function renderReportsTable(reports, filterValue) {
         const filteredReports = reports.filter(report => {
             if (filterValue === 'Semua') return true;
@@ -302,28 +324,111 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Urutkan laporan terbaru di atas
+        // Helper untuk mendapatkan warna status
+        function getStatusColor(status) {
+            if (status === 'Selesai') return '#4CAF50'; // Hijau
+            if (status === 'Investigasi') return '#FFC107'; // Kuning
+            return '#800000'; // Maroon/Merah
+        }
+        
+        // Urutkan laporan terbaru di atas (menggunakan kolom timestamp)
         filteredReports.reverse().slice(0, 10).forEach(report => { 
             const status = report['Status Tindak Lanjut'] || 'Belum Diperiksa';
-            const statusColor = status === 'Selesai' ? '#008000' : (status === 'Investigasi' ? '#ffcc00' : '#800000');
-            const textColor = statusColor === '#ffcc00' ? '#333' : '#fff';
+            const reportId = report.Timestamp; 
 
-            // Ambil Deskripsi Kejadian dan potong agar tidak terlalu panjang
             const rawDescription = report['Deskripsi Kejadian'] || 'Tidak ada deskripsi.';
             const shortDescription = rawDescription.substring(0, 50) + (rawDescription.length > 50 ? '...' : '');
             
+            // Kolom Status diubah menjadi elemen SELECT
+            const statusSelect = `
+                <select 
+                    class="status-select form-control"
+                    data-id="${reportId}"
+                    onchange="updateReportStatusFromSelect(this)"
+                    style="background-color: ${getStatusColor(status)}; color: ${status === 'Investigasi' ? '#333' : '#fff'}; border: none; padding: 5px; border-radius: 5px; font-size: 0.8rem; font-weight: 500; cursor: pointer; width: 120px;"
+                >
+                    <option value="Belum Diperiksa" ${status === 'Belum Diperiksa' ? 'selected' : ''}>Belum Diperiksa</option>
+                    <option value="Investigasi" ${status === 'Investigasi' ? 'selected' : ''}>Investigasi</option>
+                    <option value="Selesai" ${status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+                </select>
+            `;
+
+            // URUTAN DATA DIUBAH AGAR Deskripsi Singkat di sebelah Kategori:
+            // ID Pekerja | Pelapor | Lokasi | Kategori | Deskripsi Singkat | Status
             const row = `
                 <tr>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${rawDescription}">${shortDescription}</td> <td style="padding: 10px; border-bottom: 1px solid #eee;">${report['ID Pekerja'] || '-'}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #eee;">${report['ID Pekerja'] || '-'}</td>
                     <td style="padding: 10px; border-bottom: 1px solid #eee;">${report['Nama Pelapor'] || '-'}</td>
                     <td style="padding: 10px; border-bottom: 1px solid #eee;">${report['Lokasi Kejadian'] || '-'}</td>
                     <td style="padding: 10px; border-bottom: 1px solid #eee;">${report['Kategori Insiden'] || '-'}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #eee; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${rawDescription}">${shortDescription}</td> 
                     <td style="padding: 10px; border-bottom: 1px solid #eee;">
-                        <span style="background-color: ${statusColor}; color: ${textColor}; padding: 5px; border-radius: 5px; font-size: 0.8rem; font-weight: 500;">${status}</span>
+                        ${statusSelect}
                     </td>
                 </tr>
             `;
             reportTableBody.innerHTML += row;
+        });
+        
+        // Panggil fungsi untuk apply warna pada select setelah di-render
+        document.querySelectorAll('.status-select').forEach(select => {
+            select.style.backgroundColor = getStatusColor(select.value);
+            select.style.color = select.value === 'Investigasi' ? '#333' : '#fff';
+        });
+    }
+    
+    // Pasang fungsi updateReportStatus ke global scope agar bisa dipanggil dari onchange SELECT (Dibiarkan sama)
+    window.updateReportStatusFromSelect = function(selectElement) {
+        const reportId = selectElement.getAttribute('data-id');
+        const newStatus = selectElement.value;
+        const originalBgColor = selectElement.style.backgroundColor;
+        const originalColor = selectElement.style.color;
+        
+        // Ubah tampilan saat sedang loading
+        selectElement.disabled = true;
+        selectElement.style.backgroundColor = '#ccc';
+        selectElement.style.color = '#333';
+
+
+        const data = {
+            action: 'updateStatus',
+            timestamp: reportId, // Menggunakan timestamp sebagai ID unik
+            status: newStatus
+        };
+
+        const urlEncodedData = new URLSearchParams(data).toString();
+
+        fetch(UPDATE_STATUS_URL, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: urlEncodedData
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.status === 'SUCCESS') {
+                // Setelah sukses, refresh data untuk update tabel dan warna
+                fetchReportsAndRenderDashboard(); 
+                alert(`Status laporan berhasil diubah menjadi: ${newStatus}`);
+            } else {
+                alert(`Gagal update status: ${result.message}\n\nPastikan Apps Script Anda sudah di-DEPLOY ULANG dengan kode update status.`);
+                
+                // Kembalikan ke status asli jika gagal
+                selectElement.disabled = false;
+                selectElement.style.backgroundColor = originalBgColor;
+                selectElement.style.color = originalColor;
+            }
+        })
+        .catch(error => {
+            console.error('Error updating status:', error);
+            alert('Terjadi kesalahan jaringan atau server saat update status. Cek URL Apps Script Anda.');
+            
+            // Kembalikan ke status asli jika gagal
+            selectElement.disabled = false;
+            selectElement.style.backgroundColor = originalBgColor;
+            selectElement.style.color = originalColor;
         });
     }
 });
